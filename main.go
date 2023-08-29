@@ -13,6 +13,7 @@ func main() {
         })
     })
 
+    r.Static("/static", "./static")
     r.LoadHTMLGlob("templates/*.html")
     r.GET("/index", func(c *gin.Context) {
         c.HTML(http.StatusOK, "index.html", gin.H{
