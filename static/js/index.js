@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var __main = function() {
-        $('#test').html("这是一个 jquery 测试项")
+        $('#header').html(`<h1>备忘录</h1>`)
     }
 
     __main()
