@@ -3,6 +3,7 @@ package main
 import (
     "github.com/gin-gonic/gin"
     "net/http"
+    "math/rand"
 )
 
 // 定义结构体 NotesFormat
@@ -28,13 +29,20 @@ func main() {
     })
 
     // 创建 NotesFormat 类型的切片
-    var todolist_data []NotesFormat
-    // 添加元素到切片
-    todolist_data = append(todolist_data, NotesFormat{ID: 1, Notes: "Hello"})
-    todolist_data = append(todolist_data, NotesFormat{ID: 2, Notes: "World"})
+    var todolist_data []NotesFormat = make([]NotesFormat, 0)
 
     r.GET("/todolist", func(c *gin.Context) {
         c.JSON(http.StatusOK, todolist_data)
+    })
+
+    r.POST("/todolist", func(c *gin.Context) {
+        // 生成一个[0, 100)之间的随机整数
+        randomNum := rand.Intn(1000)
+
+        // 获取表单数据
+        notes := c.PostForm("notes")
+        todolist_data = append(todolist_data, NotesFormat{ID: randomNum, Notes: notes})
+        c.JSON(http.StatusOK, "操作成功")
     })
 
     // 启动服务器，默认在 0.0.0.0:8080 启动服务
