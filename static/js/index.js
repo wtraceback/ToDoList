@@ -27,7 +27,17 @@ $(document).ready(function() {
                 var todoId = deleteBtn.dataset.todoId;
 
                 console.log("todoId = ", todoId);
-                // $.ajax({})
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/todo/${todoId}`,
+                    success: function(response) {
+                        console.log(response)
+                        handleGetRequest()
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error)
+                    },
+                })
             }
         })
     }
