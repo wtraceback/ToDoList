@@ -29,19 +29,21 @@ func main() {
     })
 
     // 创建 NotesFormat 类型的切片
-    var todolist_data []NotesFormat = make([]NotesFormat, 0)
+    var todo_data []NotesFormat = make([]NotesFormat, 0)
 
-    r.GET("/todolist", func(c *gin.Context) {
-        c.JSON(http.StatusOK, todolist_data)
+	// 获取所有的待办事项
+    r.GET("/todo", func(c *gin.Context) {
+        c.JSON(http.StatusOK, todo_data)
     })
 
-    r.POST("/todolist", func(c *gin.Context) {
+	// 添加待办事项
+    r.POST("/todo", func(c *gin.Context) {
         // 生成一个[0, 100)之间的随机整数
         randomNum := rand.Intn(1000)
 
         // 获取表单数据
         notes := c.PostForm("notes")
-        todolist_data = append(todolist_data, NotesFormat{ID: randomNum, Notes: notes})
+        todo_data = append(todo_data, NotesFormat{ID: randomNum, Notes: notes})
         c.JSON(http.StatusOK, "操作成功")
     })
 
