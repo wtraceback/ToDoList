@@ -4,7 +4,7 @@ import (
     "github.com/gin-gonic/gin"
     "net/http"
     "math/rand"
-      "strconv"
+    "strconv"
 )
 
 // 定义结构体 NotesFormat
@@ -70,6 +70,33 @@ func main() {
 
         c.JSON(http.StatusOK, targetID)
     })
+
+    r.PUT("/todo/:id", func(c *gin.Context) {
+        id := c.Param("id")   // 获取路由参数 id，类型为 string
+        // 将 id 转换为 int 类型
+        targetID, err := strconv.Atoi(id)
+        if err != nil {
+            // 处理转换错误
+            c.JSON(400, gin.H{"error": "无效的参数"})
+            return
+        }
+
+        // 获取表单数据
+        notes := c.PostForm("notes")
+
+        // 遍历切片
+        for i, item := range todo_data {
+            // 如果找到目标 ID
+            if item.ID == targetID {
+                // 从切片中删除该元素
+                todo_data[i].Notes = notes
+                break
+            }
+        }
+
+        c.JSON(http.StatusOK, notes)
+    })
+
 
     // 启动服务器，默认在 0.0.0.0:8080 启动服务
     r.Run()

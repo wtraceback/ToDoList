@@ -19,14 +19,15 @@ $(document).ready(function() {
         // 通过事件委托的方式，将点击事件绑定到父元素上，当点击删除按钮时，通过事件对象获取到点击的具体按钮，
         // 再通过按钮的自定义属性获取到对应的 todo 标识符
         $('.todo-list').on('click', function(event) {
-            // 判断点击的目标元素是否为删除按钮
-            if (event.target.classList.contains('todo-delete')) {
-                // 获取点击的按钮
-                var deleteBtn = event.target;
-                // 获取对应的 todo 标识符
-                var todoId = deleteBtn.dataset.todoId;
+            // 获取点击的按钮
+            var target = event.target
 
-                console.log("todoId = ", todoId);
+            // 判断点击的目标元素是否为删除按钮
+            if (target.classList.contains('todo-delete')) {
+                // 获取对应的 todo 标识符
+                var todoId = target.dataset.todoId
+
+                console.log("todoId = ", todoId)
                 $.ajax({
                     type: 'DELETE',
                     url: `/todo/${todoId}`,
@@ -40,6 +41,36 @@ $(document).ready(function() {
                 })
             }
         })
+    }
+
+    var bindEventTextBlur = function() {
+        // 使用捕获模式
+        document.querySelector('.todo-list').addEventListener('blur', function(event) {
+            var target = event.target
+
+            if (target.classList.contains('todo-task')) {
+                // 把元素在 todo_list 中更新
+                var todoId = target.dataset.todoId
+                var notes = target.innerHTML
+
+                console.log("todoId = ", todoId)
+                $.ajax({
+                    type: 'PUT',
+                    url: `/todo/${todoId}`,
+                    data: { notes: notes },
+                    success: function(response) {
+                        console.log(response)
+                        handleGetRequest()
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(error)
+                    },
+                })
+
+                    // contentType: 'application/json',
+                    // data: JSON.stringify({ notes: notes }),
+            }
+        }, true)
     }
 
     var handlePostRequest = function(data) {
@@ -65,14 +96,14 @@ $(document).ready(function() {
             type: "GET",
             url: "/todo",
             success: function (response) {
-                console.log(response);
+                console.log(response)
                 let template = ''
                 for (let i = 0; i < response.length; i++) {
                     let d = response[i]
                     template += `
                         <div class="todo">
-                            id: ${d.ID}
-                            notes: ${d.Notes}
+                            <span>id: ${d.ID}</span>
+                            <p class="todo-task"  contenteditable="plaintext-only" data-todo-id="${d.ID}">${d.Notes}<p>
                             <button class="todo-delete" data-todo-id="${d.ID}">删除</button>
                         </div>
                     `
@@ -81,9 +112,9 @@ $(document).ready(function() {
                 $('.todo-list').html(template)
             },
             error: function (xhr, status, error) {
-                console.log(error);
+                console.log(error)
             }
-        });
+        })
     }
 
     var bindEvents = function() {
@@ -92,6 +123,9 @@ $(document).ready(function() {
 
         // 删除 todo
         bindEventDelete()
+
+        // 文本框失去焦点后保存 todo
+        bindEventTextBlur()
     }
 
     var __main = function() {
