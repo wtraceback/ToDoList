@@ -32,7 +32,6 @@ $(document).ready(function() {
                     type: 'DELETE',
                     url: `/todo/${todoId}`,
                     success: function(response) {
-                        console.log(response)
                         handleGetRequest()
                     },
                     error: function(xhr, status, error) {
@@ -49,6 +48,7 @@ $(document).ready(function() {
             var target = event.target
 
             if (target.classList.contains('todo-task')) {
+                console.log("text blur");
                 // 把元素在 todo_list 中更新
                 var todoId = target.dataset.todoId
                 var notes = target.innerHTML
@@ -59,18 +59,28 @@ $(document).ready(function() {
                     url: `/todo/${todoId}`,
                     data: { notes: notes },
                     success: function(response) {
-                        console.log(response)
                         handleGetRequest()
                     },
                     error: function(xhr, status, error) {
                         console.log(error)
                     },
                 })
-
-                    // contentType: 'application/json',
-                    // data: JSON.stringify({ notes: notes }),
             }
         }, true)
+    }
+
+    var bindEventTextEnter = function() {
+        document.querySelector('.todo-list').addEventListener('keydown', function(event){
+            var target = event.target;
+
+            // 编辑完了后点击了回车键
+            if(event.key === 'Enter' && target.classList.contains('todo-task')) {
+                // 失去焦点
+                target.blur();
+                // 阻止默认行为的发生, 即不插入回车
+                event.preventDefault();
+            }
+        })
     }
 
     var handlePostRequest = function(data) {
@@ -80,7 +90,6 @@ $(document).ready(function() {
             url: "/todo",
             data: data,
             success: function(response) {
-                console.log(response)
                 // 当创建成功后，将调用 GET 请求，去获取 todo 列表更新画面
                 handleGetRequest()
             },
@@ -96,7 +105,6 @@ $(document).ready(function() {
             type: "GET",
             url: "/todo",
             success: function (response) {
-                console.log(response)
                 let template = ''
                 for (let i = 0; i < response.length; i++) {
                     let d = response[i]
@@ -126,6 +134,9 @@ $(document).ready(function() {
 
         // 文本框失去焦点后保存 todo
         bindEventTextBlur()
+
+        // 任务栏的文本框输入 todo 按回车保存
+        bindEventTextEnter()
     }
 
     var __main = function() {
