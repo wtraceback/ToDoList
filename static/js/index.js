@@ -6,13 +6,51 @@ $(document).ready(function() {
     var bindEventAdd = function() {
         // 给 add button 绑定点击事件
         $('.todo-add').on('click', function() {
-            let value = $('.todo-input').val()
-            $('.todo-input').val("")
+            handleInputValue()
+        })
+    }
+
+    // 给 input 输入框按回车键时添加事件
+    var bindEventInputEnter = function() {
+        $('.todo-input').on('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // 失去焦点
+                event.target.blur()
+                // 阻止默认行为的发生
+                event.preventDefault()
+
+                handleInputValue()
+            }
+        })
+    }
+
+    var handleInputValue = function() {
+        let value = $('.todo-input').val().trim()
+
+        // 输入数据的判断
+        if (value == '') {
+            alert("内容不能为空")
+        } else {
             let data = {
                 notes: value,
             }
-            handlePostRequest(data)
-        })
+
+            // 向后台发送数据
+            $.ajax({
+                type: 'POST',
+                url: "/todo",
+                data: data,
+                success: function(response) {
+                    // 当创建成功后，将调用 GET 请求，去获取 todo 列表更新画面
+                    rerenderList()
+                    $('.todo-input').val("")
+                    $('.todo-input').focus()
+                },
+                error: function(xhr, status, error) {
+                    console.log(error)
+                },
+            })
+        }
     }
 
     var bindEventDelete = function() {
@@ -32,7 +70,7 @@ $(document).ready(function() {
                     type: 'DELETE',
                     url: `/todo/${todoId}`,
                     success: function(response) {
-                        handleGetRequest()
+                        rerenderList()
                     },
                     error: function(xhr, status, error) {
                         console.log(error)
@@ -59,7 +97,7 @@ $(document).ready(function() {
                     url: `/todo/${todoId}`,
                     data: { notes: notes },
                     success: function(response) {
-                        handleGetRequest()
+                        rerenderList()
                     },
                     error: function(xhr, status, error) {
                         console.log(error)
@@ -83,23 +121,7 @@ $(document).ready(function() {
         })
     }
 
-    var handlePostRequest = function(data) {
-        // 向后台发送数据
-        $.ajax({
-            type: 'POST',
-            url: "/todo",
-            data: data,
-            success: function(response) {
-                // 当创建成功后，将调用 GET 请求，去获取 todo 列表更新画面
-                handleGetRequest()
-            },
-            error: function(xhr, status, error) {
-                console.log(error)
-            },
-        })
-    }
-
-    var handleGetRequest = function() {
+    var rerenderList = function() {
         // 获取后台数据
         $.ajax({
             type: "GET",
@@ -129,6 +151,9 @@ $(document).ready(function() {
         // 添加 todo
         bindEventAdd()
 
+        // todo input 按回车时保存
+        bindEventInputEnter()
+
         // 删除 todo
         bindEventDelete()
 
@@ -144,7 +169,7 @@ $(document).ready(function() {
         bindEvents()
 
         // 在网页渲染完成后，获取后台保存的数据
-        handleGetRequest()
+        rerenderList()
     }
 
     __main()
