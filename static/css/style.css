@@ -1,3 +1,144 @@
-.body {
-    background-color: #ccc;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "gordita","Helvetica Neue","Helvetica","sans-serif";
+    font-size: 16px;
+    background-color: #F6F8F9;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+}
+
+/* header */
+header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    padding: 5px 0;
+    background-color: #fff;
+    box-shadow: 0px 2px 6px #ccc;
+}
+
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    margin: 0 auto;
+    border: 1px solid #fff;
+}
+
+.header-title {
+    flex: 1 1 33%;
+    font-size: 24px;
+    color: #272938;
+}
+
+.header-butn {
+    flex: 2 1 67%;
+    height: 70%;
+}
+
+.todo-input,
+.todo-add {
+    height: 100%;
+    border: none;
+}
+
+.todo-input {
+    width: 80%;
+    padding: 0 3%;
+    border: 2px solid #e0e6e8;
+    border-right: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.todo-input:active {
+    border-color: #aba3ff;
+    outline: 0;
+}
+
+.todo-input:focus {
+    border-color: #aba3ff;
+    outline: 0;
+}
+
+.todo-add {
+    width: 20%;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-color: #635AC7;
+    color: #fff;
+}
+
+/* section */
+.section {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    width: 100%;
+}
+
+.section-main {
+    border: 1px solid #fff;
+    width: 50%;
+    padding: 5px;
+    margin: 0 auto;
+    margin-top: 30px;
+    border-radius: 2px 3px;
+    box-shadow: 0px 0px 6px #ccc;
+    background-color: #fff;
+}
+
+.header-main,
+.section-main {
+    min-width: 650px;
+}
+
+.todo-title {
+    color: #151B26;
+}
+
+/* todo-item */
+.todo-item {
+    display: flex;
+    justify-content: space-around;
+    min-height: 30px;
+    padding: 15px 0;
+    border-bottom: 1px solid #E0E6E8;
+    background-color: #fff;
+}
+
+.todo-item:last-child {
+    border-bottom: none;
+}
+
+.todo-task {
+    flex: 0 1 70%;
+}
+
+.todo-delete {
+    flex: 0 1 10%;
+    height: 25px;
+    padding: 3px;
+    border-radius: 15px;
+    border: none;
+    color: #fff;
+    background-color: #FF9B00;
+    cursor: pointer;
+}
+
+.todo-done {
+    text-decoration: line-through;
+    color: gray;
 }

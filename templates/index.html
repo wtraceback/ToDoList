@@ -8,17 +8,28 @@
     <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
-    <header id="header">
-        <h1>备忘录</h1>
-    </header>
+    <div class="container">
+        <header class="header">
+            <!-- ToDoList 标题 -->
+            <div class="header-main">
+                <div class="header-title">
+                    <label for="id-todo-input">ToDoList</label>
+                </div>
 
-    <div>
-        <input type="text" name="input" class="todo-input">
-        <button type="submit" class="todo-add">提交</button>
-    </div>
+                <!-- 输入框和添加按钮 -->
+                <div class="header-butn">
+                    <input type="text" id="id-todo-input" class="todo-input" placeholder="Add a to-do item" required="required"><!--
+                    --><button type="button" name="button" class="todo-add">Add Task</button>
+                </div>
+            </div>
+        </header>
 
-    <div class="todo-list">
-
+        <section class="section">
+            <div class="section-main">
+                <h2 class="todo-title">看到它如此的空荡荡，你不想添加点什么吗？</h2>
+                <div class="todo-list"></div>
+            </div>
+        </section>
     </div>
 
     <script type="text/javascript" src="/static/js/jquery.min.js"></script>

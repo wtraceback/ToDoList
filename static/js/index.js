@@ -42,7 +42,7 @@ $(document).ready(function() {
                 data: data,
                 success: function(response) {
                     // 当创建成功后，将调用 GET 请求，去获取 todo 列表更新画面
-                    rerenderList()
+                    getTodoList()
                     $('.todo-input').val("")
                     $('.todo-input').focus()
                 },
@@ -70,7 +70,7 @@ $(document).ready(function() {
                     type: 'DELETE',
                     url: `/todo/${todoId}`,
                     success: function(response) {
-                        rerenderList()
+                        getTodoList()
                     },
                     error: function(xhr, status, error) {
                         console.log(error)
@@ -86,7 +86,7 @@ $(document).ready(function() {
             var target = event.target
 
             if (target.classList.contains('todo-task')) {
-                console.log("text blur");
+                console.log("text blur")
                 // 把元素在 todo_list 中更新
                 var todoId = target.dataset.todoId
                 var notes = target.innerHTML
@@ -97,7 +97,7 @@ $(document).ready(function() {
                     url: `/todo/${todoId}`,
                     data: { notes: notes },
                     success: function(response) {
-                        rerenderList()
+                        getTodoList()
                     },
                     error: function(xhr, status, error) {
                         console.log(error)
@@ -109,37 +109,54 @@ $(document).ready(function() {
 
     var bindEventTextEnter = function() {
         document.querySelector('.todo-list').addEventListener('keydown', function(event){
-            var target = event.target;
+            var target = event.target
 
             // 编辑完了后点击了回车键
             if(event.key === 'Enter' && target.classList.contains('todo-task')) {
                 // 失去焦点
-                target.blur();
+                target.blur()
                 // 阻止默认行为的发生, 即不插入回车
-                event.preventDefault();
+                event.preventDefault()
             }
         })
     }
 
-    var rerenderList = function() {
+    var setTodoListTitle = function(todo_list) {
+        if (todo_list.length == 0) {
+            $('.todo-title').html("看到它如此的空荡荡，你不想添加点什么吗？")
+        } else {
+            $('.todo-title').html("Task Lists")
+        }
+    }
+
+    var templateTodo = function(todo) {
+        var t = `
+            <div class="todo-item">
+                <p class="todo-task" contenteditable="plaintext-only" data-todo-id="${todo.ID}">${todo.Notes}</p>
+                <button class="todo-delete" data-todo-id="${todo.ID}">删除</button>
+            </div>
+        `
+
+        return t
+    }
+
+    var getTodoList = function() {
         // 获取后台数据
         $.ajax({
             type: "GET",
             url: "/todo",
             success: function (response) {
+                var todo_list = response
                 let template = ''
-                for (let i = 0; i < response.length; i++) {
-                    let d = response[i]
-                    template += `
-                        <div class="todo">
-                            <span>id: ${d.ID}</span>
-                            <p class="todo-task"  contenteditable="plaintext-only" data-todo-id="${d.ID}">${d.Notes}<p>
-                            <button class="todo-delete" data-todo-id="${d.ID}">删除</button>
-                        </div>
-                    `
 
+                for (let i = 0; i < todo_list.length; i++) {
+                    let todo = todo_list[i]
+                    template += templateTodo(todo)
                 }
+
                 $('.todo-list').html(template)
+
+                setTodoListTitle(todo_list)
             },
             error: function (xhr, status, error) {
                 console.log(error)
@@ -169,8 +186,8 @@ $(document).ready(function() {
         bindEvents()
 
         // 在网页渲染完成后，获取后台保存的数据
-        rerenderList()
+        getTodoList()
     }
 
     __main()
-});
+})
