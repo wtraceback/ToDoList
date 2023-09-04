@@ -134,6 +134,7 @@ $(document).ready(function() {
             <div class="todo-item">
                 <p class="todo-task" contenteditable="plaintext-only" data-todo-id="${todo.ID}">${todo.Notes}</p>
                 <button class="todo-delete" data-todo-id="${todo.ID}">删除</button>
+                <div class="date">${todo.Time}</div>
             </div>
         `
 

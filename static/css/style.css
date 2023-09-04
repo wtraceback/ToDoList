@@ -142,3 +142,9 @@ header {
     text-decoration: line-through;
     color: gray;
 }
+
+.date {
+    flex: 0 1 10%;
+    font-size: 12px;
+    color: #00BF9C;
+}

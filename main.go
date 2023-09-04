@@ -5,12 +5,14 @@ import (
     "net/http"
     "math/rand"
     "strconv"
+    "time"
 )
 
 // 定义结构体 NotesFormat
 type NotesFormat struct {
     ID int
     Notes string
+    Time string
 }
 
 func main() {
@@ -44,7 +46,11 @@ func main() {
 
         // 获取表单数据
         notes := c.PostForm("notes")
-        todo_data = append(todo_data, NotesFormat{ID: randomNum, Notes: notes})
+        todo_data = append(todo_data, NotesFormat{
+            ID: randomNum,
+            Notes: notes,
+            Time: time.Now().Format("2006-01-02 15:04:05"),
+        })
         c.JSON(http.StatusOK, "操作成功")
     })
 
