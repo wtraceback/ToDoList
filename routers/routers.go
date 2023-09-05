@@ -19,5 +19,18 @@ func SetupRouter() *gin.Engine {
     // 注册首页的路由
     route.GET("/", controller.IndexHandler)
 
+    // ToDoList 任务相关
+    // 获取所有的待办事项
+    route.GET("/todo", controller.GetTodoList)
+
+    // 创建新的 todo 任务
+    route.POST("/todo", controller.CreateTodo)
+
+    // 删除 todo 任务
+    route.DELETE("/todo/:id", controller.DeleteTodo)
+
+    // 更新 todo 任务
+    route.PUT("/todo/:id", controller.UpdateTodo)
+
     return route
 }
