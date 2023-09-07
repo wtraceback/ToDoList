@@ -38,7 +38,7 @@ $(document).ready(function() {
             // 向后台发送数据
             $.ajax({
                 type: 'POST',
-                url: "/todo",
+                url: "/v1/todo",
                 data: data,
                 success: function(response) {
                     // 当创建成功后，将调用 GET 请求，去获取 todo 列表更新画面
@@ -68,7 +68,7 @@ $(document).ready(function() {
                 console.log("todoId = ", todoId)
                 $.ajax({
                     type: 'DELETE',
-                    url: `/todo/${todoId}`,
+                    url: `/v1/todo/${todoId}`,
                     success: function(response) {
                         getTodoList()
                     },
@@ -94,7 +94,7 @@ $(document).ready(function() {
                 console.log("todoId = ", todoId)
                 $.ajax({
                     type: 'PUT',
-                    url: `/todo/${todoId}`,
+                    url: `/v1/todo/${todoId}`,
                     data: { notes: notes },
                     success: function(response) {
                         getTodoList()
@@ -164,7 +164,7 @@ $(document).ready(function() {
         // 获取后台数据
         $.ajax({
             type: "GET",
-            url: "/todo",
+            url: "/v1/todo",
             success: function (response) {
                 var todo_list = response
                 let template = ''
