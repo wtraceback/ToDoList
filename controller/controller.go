@@ -5,6 +5,7 @@ import (
     "net/http"
     "ToDoList/models"
     "time"
+    "html"
 )
 
 
@@ -29,7 +30,7 @@ func CreateTodo(c *gin.Context) {
     notes := c.PostForm("notes")
 
     todo := models.Todo{
-        Notes: notes,
+        Notes: html.EscapeString(notes),
     }
 
     // 存入数据库
