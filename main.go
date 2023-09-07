@@ -4,6 +4,7 @@ import (
     "ToDoList/routers"
     "fmt"
     "ToDoList/dao"
+    "ToDoList/models"
 )
 
 func main() {
@@ -13,6 +14,9 @@ func main() {
         fmt.Printf("初始化数据库失败，错误信息为：%v\n", err)
         return
     }
+	// 当我们执行迁移操作（db.AutoMigrate(&models.Todo{})）时，
+    // GORM 会根据结构体的定义自动创建相应的数据库表，并根据标签指定的列名进行映射。
+    dao.DB.AutoMigrate(&models.Todo{})
 
 
     // 注册路由

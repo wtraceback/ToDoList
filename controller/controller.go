@@ -3,10 +3,9 @@ package controller
 import (
     "github.com/gin-gonic/gin"
     "net/http"
-    "math/rand"
     "strconv"
-    "time"
     "ToDoList/setting"
+    "ToDoList/models"
 )
 
 // 创建 NotesFormat 类型的切片
@@ -17,21 +16,37 @@ func IndexHandler(c *gin.Context) {
 }
 
 func GetTodoList(c *gin.Context) {
-    c.JSON(http.StatusOK, todo_data)
+    todolist, err := models.GetAllTodo()
+    if err != nil {
+        c.JSON(http.StatusOK, gin.H{
+            "message": "操作失败",
+            "error": err.Error(),
+        })
+    } else {
+        c.JSON(http.StatusOK, todolist)
+    }
 }
 
 func CreateTodo(c *gin.Context) {
-    // 生成一个[0, 100)之间的随机整数
-    randomNum := rand.Intn(1000)
-
     // 获取表单数据
     notes := c.PostForm("notes")
-    todo_data = append(todo_data, setting.NotesFormat{
-        ID: randomNum,
+
+    todo := models.Todo{
         Notes: notes,
-        Time: time.Now().Format("2006-01-02 15:04:05"),
-    })
-    c.JSON(http.StatusOK, "操作成功")
+    }
+
+    // 存入数据库
+    err := models.CreateTodo(&todo)
+    if err != nil {
+        c.JSON(http.StatusOK, gin.H{
+            "message": "操作失败",
+            "error": err.Error(),
+        })
+    } else {
+        c.JSON(http.StatusOK, gin.H{
+            "message": "操作成功",
+        })
+    }
 }
 
 func DeleteTodo(c *gin.Context) {
@@ -80,5 +95,7 @@ func UpdateTodo(c *gin.Context) {
         }
     }
 
-    c.JSON(http.StatusOK, notes)
+    c.JSON(http.StatusOK, gin.H{
+        "message": "操作成功",
+    })
 }

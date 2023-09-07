@@ -129,12 +129,31 @@ $(document).ready(function() {
         }
     }
 
+    var datetimeFormat = function(time_str) {
+        var date = new Date(time_str);
+
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        var h = date.getHours();
+        var min = date.getMinutes();
+        var sec = date.getSeconds();
+
+        m = m < 10 ? '0' + m : m;
+        d = d < 10 ? '0' + d : d;
+        h = h < 10 ? '0' + h : h;
+        min = min < 10 ? '0' + min : min;
+        sec = sec < 10 ? '0' + sec : sec;
+
+        return `${y}-${m}-${d} ${h}:${min}:${sec}`;
+    }
+
     var templateTodo = function(todo) {
         var t = `
             <div class="todo-item">
                 <p class="todo-task" contenteditable="plaintext-only" data-todo-id="${todo.ID}">${todo.Notes}</p>
                 <button class="todo-delete" data-todo-id="${todo.ID}">删除</button>
-                <div class="date">${todo.Time}</div>
+                <div class="date">${datetimeFormat(todo.CreatedAt)}</div>
             </div>
         `
 
