@@ -26,6 +26,4 @@ func main() {
     if err != nil {
         fmt.Printf("服务器启动失败，error: %v\n", err)
     }
-
-    // https://gitee.com/gitwbbin/go-gin-demo
 }
