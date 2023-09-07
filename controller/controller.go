@@ -3,13 +3,10 @@ package controller
 import (
     "github.com/gin-gonic/gin"
     "net/http"
-    "strconv"
-    "ToDoList/setting"
     "ToDoList/models"
+    "time"
 )
 
-// 创建 NotesFormat 类型的切片
-var todo_data []setting.NotesFormat = make([]setting.NotesFormat, 0)
 
 func IndexHandler(c *gin.Context) {
     c.HTML(http.StatusOK, "index.html", nil)
@@ -43,59 +40,49 @@ func CreateTodo(c *gin.Context) {
             "error": err.Error(),
         })
     } else {
-        c.JSON(http.StatusOK, gin.H{
-            "message": "操作成功",
-        })
+        c.JSON(http.StatusOK, gin.H{"message": "操作成功",})
     }
 }
 
 func DeleteTodo(c *gin.Context) {
-    id := c.Param("id")   // 获取路由参数 id，类型为 string
-    // 将 id 转换为 int 类型
-    targetID, err := strconv.Atoi(id)
-    if err != nil {
-        // 处理转换错误
-        c.JSON(400, gin.H{"error": "无效的参数"})
+    // 获取路由参数 id，类型为 string
+    id, ok := c.Params.Get("id")
+    if !ok {
+        c.JSON(http.StatusOK, gin.H{"error": "无效的 id"})
         return
     }
 
-    // 遍历切片
-    for i, item := range todo_data {
-        // 如果找到目标 ID
-        if item.ID == targetID {
-            // 从切片中删除该元素
-            todo_data = append(todo_data[:i], todo_data[i+1:]...)
-            break
-        }
+    if err := models.DeleteTodo(id); err != nil {
+        c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+    } else {
+        c.JSON(http.StatusOK, gin.H{"message": "操作成功"})
     }
-
-    c.JSON(http.StatusOK, targetID)
 }
 
 func UpdateTodo(c *gin.Context) {
-    id := c.Param("id")   // 获取路由参数 id，类型为 string
-    // 将 id 转换为 int 类型
-    targetID, err := strconv.Atoi(id)
+    // 获取路由参数 id，类型为 string
+    id, ok := c.Params.Get("id")
+    if !ok {
+        c.JSON(http.StatusOK, gin.H{"error": "无效的 id"})
+        return
+    }
+
+    // 获取数据库中对应 todo 的值
+    todo, err := models.GetTodoById(id)
     if err != nil {
-        // 处理转换错误
-        c.JSON(400, gin.H{"error": "无效的参数"})
+        c.JSON(http.StatusOK, gin.H{"error": err.Error()})
         return
     }
 
     // 获取表单数据
     notes := c.PostForm("notes")
+    todo.Notes = notes
+    todo.UpdatedAt = time.Now()
 
-    // 遍历切片
-    for i, item := range todo_data {
-        // 如果找到目标 ID
-        if item.ID == targetID {
-            // 从切片中删除该元素
-            todo_data[i].Notes = notes
-            break
-        }
+    err = models.UpdateTodo(todo)
+    if err != nil {
+        c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+    } else {
+        c.JSON(http.StatusOK, gin.H{"message": "操作成功",})
     }
-
-    c.JSON(http.StatusOK, gin.H{
-        "message": "操作成功",
-    })
 }

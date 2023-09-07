@@ -27,10 +27,10 @@ func SetupRouter() *gin.Engine {
     route.POST("/todo", controller.CreateTodo)
 
     // // 删除 todo 任务
-    // route.DELETE("/todo/:id", controller.DeleteTodo)
+    route.DELETE("/todo/:id", controller.DeleteTodo)
 
     // // 更新 todo 任务
-    // route.PUT("/todo/:id", controller.UpdateTodo)
+    route.PUT("/todo/:id", controller.UpdateTodo)
 
     return route
 }

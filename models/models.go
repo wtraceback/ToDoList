@@ -27,8 +27,32 @@ func GetAllTodo() (todolist []*Todo, err error) {
     return todolist, err
 }
 
+// 获取单个的 todo 任务
+func GetTodoById(id string) (todo *Todo, err error) {
+    // 创建一个指向 Todo 类型的零值的指针。它会分配内存并将其初始化为类型的零值。
+    todo = new(Todo)
+    err = dao.DB.First(todo, id).Error
+    if err != nil {
+        return nil, err
+    }
+
+    return todo, nil
+}
+
 // 创建 todo
 func CreateTodo(todo *Todo) (err error) {
-    err = dao.DB.Create(&todo).Error
+    err = dao.DB.Create(todo).Error
     return err
+}
+
+// 删除 todo
+func DeleteTodo(id string) (err error) {
+    err = dao.DB.Where("id = ?", id).Delete(&Todo{}).Error
+    return
+}
+
+// 更新 todo
+func UpdateTodo(todo *Todo) (err error) {
+    err = dao.DB.Save(todo).Error
+    return
 }
