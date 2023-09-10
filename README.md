@@ -4,6 +4,18 @@
 ## 项目截图
 ![主页](screenshot/index.gif)
 
+## 项目结构
+```
+├── controller/     # 控制层
+├── dao/            # 数据库操作
+├── models/         # 模型层
+├── routes/         # 路由
+├── static/         # 静态目录
+├── templates       # 模板文件目录
+├── Dockerfile      # 构建 Docker 镜像的文本文件
+└── main.go         # 项目入口
+```
+
 ## 项目功能
 - todo 任务的增删查改
 
